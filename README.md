@@ -42,7 +42,7 @@ Dichas funciones tienen como fin general...
 
       //// Siguiente Ronda: Una vez colocados los 3 bloques, el flujo vuelve al inicio del "Bucle de Partida" para generar nuevos bloques.
 
-##### Optimización del Código
+### Optimización del Código
 
 Actualmente el archivo "JUEGO_BlockBlast_Base" contiene el código del juego base. Es por ello que existen diferentes mejoras que se pueden implementar en el código para hacerlo más visual y entretenido (las dejo como puntos de mejora para versiones posteriores).
 
