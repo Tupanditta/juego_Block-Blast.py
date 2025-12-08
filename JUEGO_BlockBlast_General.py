@@ -1,0 +1,335 @@
+####################################################
+
+# Autor: Ander Lifeng Sola
+# Alias: Tupanditta :)
+# Color Favorito: Azul Stich
+
+# Fecha: Jv 04/12/2025
+# Archivo: JUEGO_BlockBlast_1.0.py
+# Descripción: Block Blast el juego de bloques.
+
+####################################################
+
+
+################################            LIBRERÍAS
+
+import math
+from random import randint
+
+
+################################            FUNCIONES
+
+#####       1. Crear y mostrar tabla
+
+def crear_tablero(N): #Creo un tablero vacío de NxN
+    #Constantes
+    #Listas
+    tablero = []
+
+    #Variables
+    #Cuerpo General
+    for fila in range(N):
+        fila_ = []
+        for columna in range(N):
+            fila_.append(' ')
+        tablero.append(fila_)
+    
+    return tablero #Tablero de NxN (8x8)
+    
+def mostrar_tablero(tablero): #Mostrar el tablero (NOTA: No devuelvo nada)
+    print() #Visual
+
+    #Cuerpo General
+    print('     ', end='')
+    for columna in range(len(tablero)):
+        print(columna, end='   ')
+    print()
+
+    print('   +', end=' ')
+    print('- + '*8)
+
+    for fila in range(len(tablero)):
+        print(fila, ' |', end='') #Primer símbolo de cada fila
+        
+        for columna in range(len(tablero)):
+            if tablero[fila][columna] != ' ':
+                print('', tablero[fila][columna], '|', end='')
+            else:
+                print('   |', end='')
+
+        print() #Terminar fila
+
+        #Cambio de fila
+        print('   +', end=' ')
+        print('- + '*8)
+
+    print() #Visual
+
+#####       2. Datos del turno
+
+    #NOTA: #PANDA: Cambiar a que puedan repetirse los bloques, y que aparezcan por probabilidad
+def bloques_nuevos(lista_bloques): #Elije 3 bloques nuevos aleatorios de entre todas las posibilidades (lista_bloques[str])
+    #Listas
+    lista_bloques_nuevos = []
+
+    #Variables
+    bloque1 = 0 #Entra en el bucle ya que inicializo los tres bloques a 0
+    bloque2 = 0 #Entra en el bucle ya que inicializo los tres bloques a 0
+    bloque3 = 0 #Entra en el bucle ya que inicializo los tres bloques a 0
+
+    #Cuerpo General
+        #Entra en el bucle ya que inicializo los tres bloques a 0
+    while bloque1 == bloque2 or bloque1 == bloque3 or bloque3 == bloque2:
+        bloque1 = randint(0, len(lista_bloques) - 1) #Así puedo ir añadiendo bloques nuevos a la 'lista_bloques'
+        bloque2 = randint(0, len(lista_bloques) - 1) #Así puedo ir añadiendo bloques nuevos a la 'lista_bloques'
+        bloque3 = randint(0, len(lista_bloques) - 1) #Así puedo ir añadiendo bloques nuevos a la 'lista_bloques'
+
+    lista_bloques_nuevos.append(lista_bloques[bloque1]) #Añado el bloque a la lista que mostraré con los 3 nuevos bloques
+    lista_bloques_nuevos.append(lista_bloques[bloque2]) #Añado el bloque a la lista que mostraré con los 3 nuevos bloques
+    lista_bloques_nuevos.append(lista_bloques[bloque3]) #Añado el bloque a la lista que mostraré con los 3 nuevos bloques
+
+        #NOTA: SIEMPRE, en la posición 0 (bloque1), posición 1 (bloque2) y posición 2 (bloque3)
+    return lista_bloques_nuevos #Devuelvo la lista con los 3 nuevos bloques (Sus respectivos nombres)
+    
+def matriz_bloque(bloque): #Le paso el nombre (str) de un bloque nuevo, y me devuelve su respectiva matriz
+    #Matrices
+        #NOTA: Una 'X' y lo demás 'O' o '_'
+        #NOTA: He creado matrices, NO LISTAS
+    Cuadrado_mini = [['X', 'O'], ['O', 'O']] 
+    L_mini = [['X', ' '], ['O', ' '], ['O', 'O']]
+    Linea_4 = [['X', 'O', 'O', 'O']]
+    Linea_3 = [['X', 'O', 'O']]
+    Uno = [['X']]
+
+    #Variables
+    matriz_bloque = []
+    
+    #Bucle condicional para asignar a 'matriz_bloque' su valor según 'bloque'
+    if bloque == 'Cuadrado_mini':
+        matriz_bloque = Cuadrado_mini
+    elif bloque == 'L_mini':
+        matriz_bloque = L_mini
+    elif bloque == 'Uno':
+        matriz_bloque = Uno
+    elif bloque == 'Linea_3':
+        matriz_bloque = Linea_3
+    elif bloque == 'Linea_4':
+        matriz_bloque = Linea_4
+
+    return matriz_bloque #Devuelvo la matriz asignada al 'bloque' (str)
+
+def mostrar_matriz_bloque(matriz_bloque): #Recoge el bloque (matriz) y lo imprime
+    #Cuerpo General #PANDA: Por ahora con len(bloque), luego si eso cambiar a 'fila in bloque'
+    for fila in range(len(matriz_bloque)):
+        if fila != 0: 
+            print(' '*13, end='') #Para que concuerde con 'Bloque X --> '
+
+        for columna in range(len(matriz_bloque[fila])):
+                print(matriz_bloque[fila][columna], end=' ')
+    
+        print()
+
+def elegir_bloque_y_pos(lista_bloques_no_puestos): #devuelve una lista con el bloque y su pos
+    #Listas
+    lista_bloque_pos = []
+
+    #Variables
+    pos_col = -1 #Inicializamos pos_col < 0, para que entre en el bucle, me evito un if
+    pos_fil = -1 #Inicializamos pos_col < 0, para que entre en el bucle, me evito un if
+    num_bloque = 10 #Incializo num_bloque con 9, que no esta en lista_bloques_no_puestos, entro en el bucle si o sí
+
+    #Cuerpo General
+    num_bloque = int(input('Elije un bloque {} : '.format(lista_bloques_no_puestos))) - 1 #Las posiciones de una lista son 0, 1, 2 y NO 1, 2, 3
+    while num_bloque + 1 not in lista_bloques_no_puestos:
+        print('Introduzca un bloque válido')
+        num_bloque = int(input('Elije un bloque {} : '.format(lista_bloques_no_puestos))) - 1 #Las posiciones de una lista son 0, 1, 2 y NO 1, 2, 3
+    
+    pos_fil = int(input('Introduzca la fila: '))
+    pos_col = int(input('Introduzca la columna: '))
+    while 0 > pos_fil or pos_fil > 7 or 0 > pos_col or pos_col > 7: #Sino error (out of range)
+        print('El rango de la tabla es de índices 0-7')
+        pos_fil = int(input('Introduzca la fila: '))
+        pos_col = int(input('Introduzca la columna: '))
+        
+    
+    
+    lista_bloque_pos = [num_bloque, pos_fil, pos_col] 
+
+    return lista_bloque_pos #devuelve una lista con el bloque y su pos
+
+#####       3. Actualizar tabla
+
+def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero):
+    #Variables
+    bloque_pos_valido = True #Comienzo en True y busco un fallo
+
+    #Coordenadas internas de X
+    for fila in range(len(matriz_bloque)):
+        for columna in range(len(matriz_bloque[fila])):
+            if matriz_bloque[fila][columna] == 'X':
+                X_fila = fila
+                X_columna = columna
+                break
+
+    #Cuerpo General
+    for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
+        for columna in range(len(matriz_bloque[fila])):
+            if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
+                fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
+                columna_destino_tablero = lista_bloque_pos[2] + (columna - X_columna) #Posición de 'X' o 'O' en el tablero
+
+                if 0 <= fila_destino_tablero <= 7 and 0 <= columna_destino_tablero <= 7: #Está dentro del rango del tablero
+                    if tablero[fila_destino_tablero][columna_destino_tablero] != ' ': #El hueco ya está ocupado
+                        print('Ese hueco está ocupado')
+                        bloque_pos_valido = False
+                        return False #Me salgo del 'for columna', 'for fila' y de la función
+
+                else: #Estas fuera del tablero
+                    print('Introduce el bloque DENTRO del tablero')
+                    bloque_pos_valido = False
+                    return False #Me salgo del 'for columna', 'for fila' y de la función
+
+    return bloque_pos_valido #Booleano para saber si puedo introducir el bloque en esa posición
+    print()
+
+def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
+    #Coordenadas internas de X
+    for fila in range(len(matriz_bloque)):
+        for columna in range(len(matriz_bloque[fila])):
+            if matriz_bloque[fila][columna] == 'X':
+                X_fila = fila
+                X_columna = columna
+                break
+
+    #Cuerpo General
+    for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
+        for columna in range(len(matriz_bloque[fila])):
+            if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
+                fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
+                columna_destino_tablero = lista_bloque_pos[2] + (columna - X_columna) #Posición de 'X' o 'O' en el tablero
+
+                tablero[fila_destino_tablero][columna_destino_tablero] = 'O' #Cambio el 'vacío' por 'O'
+                #NOTA: Solo hago este cambio porque anteriormente he verificado que puedo hacerlo (lugar_correcto)
+                
+    return tablero #Devuelvo el nuevo tablero
+
+def actualizar_tablero(): #Borrar lineas/columnas llenas
+    print()
+
+#####       4. Terminar
+def terminado(): #No hay huecos para introducir los nuevos bloques
+    print()
+
+
+################################            FUNCIÓN GENERAL
+
+def BlockBlast():
+    #####   Constantes
+    N = 8
+
+    #####   Listas
+    lista_bloques = ['L_mini', 'Cuadrado_mini', 'Linea_4', 'Uno', 'Linea_3']
+    lista_bloque_pos = [] #lista con el bloque que se va a introducir y su posición
+    lista_bloques_no_puestos = [] #Lista con los bloques que puedo posicionar
+    lista_bloques_puestos = [] #Lista con los bloques que ya no puedo posicionar
+    matriz_bloque1 = [] #Matriz del bloque nuevo 1
+    matriz_bloque2 = [] #Matriz del bloque nuevo 2
+    matriz_bloque3 = [] #Matriz del bloque nuevo 3
+    
+    #####   Variables
+    terminado = False #Para que el juego termine
+    bloque1 = '' #Nombre del bloque 1
+    bloque2 = '' #Nombre del bloque 2
+    bloque3 = '' #Nombre del bloque 3
+    cont_bloques_no_puestos = 3 #Cuenta cuantos bloques quedan por poner
+
+    #####   Cuerpo General
+        ## Inicio
+    tablero = crear_tablero(N) #Creo un tablero vacío de NxN
+    mostrar_tablero(tablero)
+
+        ## Medio Juego
+    while not terminado:
+            #Inicializar listas y variables
+        lista_bloques_no_puestos = [1, 2, 3] #Siempre comienzo con 3 nuevos bloques
+
+            # Crear 3 bloques aleatorios nuevos
+        lista_bloques_nuevos = bloques_nuevos(lista_bloques) #Crear 3 bloques nuevos aleatorios de entre todas las posibilidades (lista_bloques[str])
+        print(lista_bloques_nuevos) #PANDA: Solo para ver todo, luego borrar
+            
+            # Cambio de bloqueX (str) a matriz_bloqueX (list)
+        bloque1 = lista_bloques_nuevos[0] #Asignar valor (nombre del bloque)
+        bloque2 = lista_bloques_nuevos[1] #Asignar valor (nombre del bloque)
+        bloque3 = lista_bloques_nuevos[2] #Asignar valor (nombre del bloque)
+
+        matriz_bloque1 = matriz_bloque(bloque1) #Obtengo la matriz_bloque
+        matriz_bloque2 = matriz_bloque(bloque2) #Obtengo la matriz_bloque
+        matriz_bloque3 = matriz_bloque(bloque3) #Obtengo la matriz_bloque
+
+        print('Bloque 1 --> ', end='')
+        mostrar_matriz_bloque(matriz_bloque1) #Final: Muestro el bloque
+        print() #Visual
+        print('Bloque 2 --> ', end='')
+        mostrar_matriz_bloque(matriz_bloque2) #Final: Muestro el bloque
+        print() #Visual
+        print('Bloque 3 --> ', end='')
+        mostrar_matriz_bloque(matriz_bloque3) #Final: Muestro el bloque
+        print() #Visual
+
+            #El usuario escoje, posiciona, y el tablero cambia
+                #Escojer y posicionar
+        while cont_bloques_no_puestos > 0: #PANDA: Falta; que los bloques nuevos no tienen hueco (pierdes)
+            #Variables
+            bloque_pos_valido = False #Así se mete en el bucle siempre
+            
+            #Cuerpo General
+            #PANDA: En esta fila me falta comprobar si puedo meter bloques de los nuevos
+
+            while not bloque_pos_valido: #Para saber si puedo poner este bloque en esa posición
+                lista_bloque_pos = elegir_bloque_y_pos(lista_bloques_no_puestos)
+                #print(lista_bloque_pos) #PANDA: Solo para ver, luego borrar
+
+                if lista_bloque_pos[0] not in lista_bloques_puestos: #'lista_bloque_pos[0]' simepre es el número del bloque
+                    #Verifico si puedo insertar el bloque en la posición
+                    if lista_bloque_pos[0] == 0:
+                        bloque_pos_valido = lugar_correcto(lista_bloque_pos, matriz_bloque1, tablero) #Si me devuelve True, borro el bloque de lista_bloques_no_puestos y paso a pedir el siguiente bloque
+                    elif lista_bloque_pos[0] == 1: 
+                        bloque_pos_valido = lugar_correcto(lista_bloque_pos, matriz_bloque2, tablero)
+                    else:
+                        bloque_pos_valido = lugar_correcto(lista_bloque_pos, matriz_bloque3, tablero)
+
+                    #Ya lo he verificado
+                    if bloque_pos_valido: #Solo si la posición es válida
+                        lista_bloques_no_puestos.remove(lista_bloque_pos[0] + 1) #Elimino de la 'lista_bloques_no_puestos' los bloques que voy poniendo
+                
+                else:
+                    print('Ya has introducido este bloque antes')
+                
+            lista_bloques_puestos.append(lista_bloque_pos[0]) #Añado el bloque que he puesto. En este punto el bloque está bien puesto; su posición es válida
+
+            #Añado el bloque al tablero
+            if lista_bloque_pos[0] == 0:
+                tablero = colocar_bloque(lista_bloque_pos, matriz_bloque1, tablero)
+            elif lista_bloque_pos[0] == 1: 
+                tablero = colocar_bloque(lista_bloque_pos, matriz_bloque2, tablero)
+            else:
+                tablero = colocar_bloque(lista_bloque_pos, matriz_bloque3, tablero)
+            
+            print()#Visual
+            mostrar_tablero(tablero)
+            print() #Visual
+
+            cont_bloques_no_puestos -= 1 #Sentencia de continuar
+
+        #Actualizar Tablero
+        #PANDA: Me falta una función para actualizar tablero, y otra para borrar filas, columnas
+
+            # Prueba #PANDA: Provisional para terminar, luego borrar
+        prueba = input('Terminado s/n: ')
+
+        if prueba == 's':
+            terminado = True
+
+
+################################            JUGAR
+BlockBlast()
