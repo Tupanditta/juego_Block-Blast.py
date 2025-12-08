@@ -1,6 +1,6 @@
 ####################################################
 
-# Autor: Ander Sola
+# Autor: Ander Lifeng Sola
 # Alias: Tupanditta :)
 # Color Favorito: Azul Stich
 
@@ -159,7 +159,7 @@ def elegir_bloque_y_pos(lista_bloques_no_puestos): #devuelve una lista con el bl
 
 #####       3. Actualizar tabla
 
-def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero):
+def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
     #Variables
     bloque_pos_valido = True #Comienzo en True y busco un fallo
 
@@ -180,12 +180,15 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero):
 
                 if 0 <= fila_destino_tablero <= 7 and 0 <= columna_destino_tablero <= 7: #Está dentro del rango del tablero
                     if tablero[fila_destino_tablero][columna_destino_tablero] != ' ': #El hueco ya está ocupado
-                        print('Ese hueco está ocupado')
+                        if avisar: #Para evitar prints al usar la función 'bloque_cabe'
+                            print('Ese hueco está ocupado')
+
                         bloque_pos_valido = False
                         return False #Me salgo del 'for columna', 'for fila' y de la función
 
                 else: #Estas fuera del tablero
-                    print('Introduce el bloque DENTRO del tablero')
+                    if avisar: #Para evitar prints al usar la función 'bloque_cabe'
+                        print('Introduce el bloque DENTRO del tablero')
                     bloque_pos_valido = False
                     return False #Me salgo del 'for columna', 'for fila' y de la función
 
@@ -213,12 +216,83 @@ def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
                 
     return tablero #Devuelvo el nuevo tablero
 
-def actualizar_tablero(): #Borrar lineas/columnas llenas
-    print()
+def actualizar_tablero(tablero): #Borrar lineas/columnas llenas
+    #Variables
+    fila_borrar = []
+    columna_borrar = []
+    
+    #Localizar filas llenas
+    for fila in range(len(tablero)): 
+        if ' ' not in tablero[fila]: #No hay huecos vacíos en la fila
+            fila_borrar.append(fila) #Agrego que filas estan llenas, es decir, cuales no tienen huecos vacíos
+
+    #Localizar columnas llenas
+    for columna in range(len(tablero)):
+        columna_llena = True #COmienza en True y compruebo que lo sea
+
+        for fila in range(len(tablero)):
+            if tablero[fila][columna] == ' ':
+                columna_llena = False #Si encuentro un hueco vacío, la columna no está llena
+                break
+
+        if columna_llena: #Será true y se ejecutará solo si no he encontrado ningún hueco vacío
+            columna_borrar.append(columna)
+
+    
+    #Borrar todas las filas llenas
+    for fila in range(len(fila_borrar)):
+        
+        for elemento in range(len(tablero)):
+            tablero[fila_borrar[fila]][elemento] = ' '
+
+    #Borrar todas las columnas llenas
+    for columna in range(len(columna_borrar)):
+
+        for fila in range(len(tablero)):
+            tablero[fila][columna_borrar[columna]] = ' '
+
+    return tablero
 
 #####       4. Terminar
-def terminado(): #No hay huecos para introducir los nuevos bloques
-    print()
+def bloque_cabe(tablero, matriz_bloque):
+    #Variables
+    cabe = False #Asumo que no cabe en ningún lado, y miro si es cierto
+
+    #Cuerpo General
+    for fila in range(len(tablero)):
+
+        for columna in range(len(tablero)):
+            lista_bloque_pos = ['bloque', fila, columna] #Recorro todas las posiciones posibles del bloque en el tablero
+            if lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=False): #Compruebo si hay algún lugar_correcto (espacio donde cabe el bloque)
+                cabe = True
+                return True
+            
+    return cabe #Devuelve si hay alguna casilla donde el bloque puede insertarse (booleano)
+
+def terminado_(tablero, matriz_bloque1, matriz_bloque2, matriz_bloque3, lista_bloques_no_puestos): #No hay huecos para introducir los nuevos bloques
+    #Variables
+    terminado = False #Comienzo asumiendo que todos los bloques caben
+    cont_no_cabe = 0 #Inicializar contador a 0
+
+    #Cuerpo General
+    for bloque in lista_bloques_no_puestos:
+        if bloque == 1:
+            cabe = bloque_cabe(tablero, matriz_bloque1) #Devuelvo True si cabe, y False si no cabe
+            if not cabe:
+                cont_no_cabe += 1 #Cuento cuantos bloques no caben
+        elif bloque == 2:
+            cabe = bloque_cabe(tablero, matriz_bloque2) #Devuelvo True si cabe, y False si no cabe
+            if not cabe:
+                cont_no_cabe += 1 #Cuento cuantos bloques no caben
+        else: #Bloque == 3
+            cabe = bloque_cabe(tablero, matriz_bloque3) #Devuelvo True si cabe, y False si no cabe
+            if not cabe:
+                cont_no_cabe += 1 #Cuento cuantos bloques no caben
+    
+    if cont_no_cabe == len(lista_bloques_no_puestos): #Número de bloques que no caben y bloques que faltan por poner es igual
+        terminado = True
+
+    return terminado #Será True si al menos un bloque no cabe
 
 
 ################################            FUNCIÓN GENERAL
@@ -241,7 +315,7 @@ def BlockBlast():
     bloque1 = '' #Nombre del bloque 1
     bloque2 = '' #Nombre del bloque 2
     bloque3 = '' #Nombre del bloque 3
-    cont_bloques_no_puestos = 3 #Cuenta cuantos bloques quedan por poner
+    
 
     #####   Cuerpo General
         ## Inicio
@@ -252,10 +326,11 @@ def BlockBlast():
     while not terminado:
             #Inicializar listas y variables
         lista_bloques_no_puestos = [1, 2, 3] #Siempre comienzo con 3 nuevos bloques
+        lista_bloques_puestos = [] #Lista con los bloques que ya no puedo posicionar
+        cont_bloques_no_puestos = 3 #Cuenta cuantos bloques quedan por poner
 
             # Crear 3 bloques aleatorios nuevos
         lista_bloques_nuevos = bloques_nuevos(lista_bloques) #Crear 3 bloques nuevos aleatorios de entre todas las posibilidades (lista_bloques[str])
-        print(lista_bloques_nuevos) #PANDA: Solo para ver todo, luego borrar
             
             # Cambio de bloqueX (str) a matriz_bloqueX (list)
         bloque1 = lista_bloques_nuevos[0] #Asignar valor (nombre del bloque)
@@ -283,7 +358,12 @@ def BlockBlast():
             bloque_pos_valido = False #Así se mete en el bucle siempre
             
             #Cuerpo General
-            #PANDA: En esta fila me falta comprobar si puedo meter bloques de los nuevos
+            terminado = terminado_(tablero, matriz_bloque1, matriz_bloque2, matriz_bloque3, lista_bloques_no_puestos)
+            if terminado: #No hay espacio para ningún bloque de los que faltan por introducir
+                print() #Visual
+                print('HAS PERDIDO')
+                
+                break
 
             while not bloque_pos_valido: #Para saber si puedo poner este bloque en esa posición
                 lista_bloque_pos = elegir_bloque_y_pos(lista_bloques_no_puestos)
@@ -316,21 +396,17 @@ def BlockBlast():
                 tablero = colocar_bloque(lista_bloque_pos, matriz_bloque3, tablero)
             
             print()#Visual
+            #mostrar_tablero(tablero)
+            print() #Visual
+
+            #Actualizar Tablero
+            tablero = actualizar_tablero(tablero)
+            print()#Visual
             mostrar_tablero(tablero)
             print() #Visual
 
             cont_bloques_no_puestos -= 1 #Sentencia de continuar
 
-        #Actualizar Tablero
-        #PANDA: Me falta una función para actualizar tablero, y otra para borrar filas, columnas
-
-            # Prueba #PANDA: Provisional para terminar, luego borrar
-        prueba = input('Terminado s/n: ')
-
-        if prueba == 's':
-            terminado = True
-
 
 ################################            JUGAR
-
 BlockBlast()
