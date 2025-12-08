@@ -13,7 +13,6 @@
 
 ################################            LIBRERÍAS
 
-import math
 from random import randint
 
 
@@ -67,7 +66,6 @@ def mostrar_tablero(tablero): #Mostrar el tablero (NOTA: No devuelvo nada)
 
 #####       2. Datos del turno
 
-    #NOTA: #PANDA: Cambiar a que puedan repetirse los bloques, y que aparezcan por probabilidad
 def bloques_nuevos(lista_bloques): #Elije 3 bloques nuevos aleatorios de entre todas las posibilidades (lista_bloques[str])
     #Listas
     lista_bloques_nuevos = []
@@ -119,7 +117,7 @@ def matriz_bloque(bloque): #Le paso el nombre (str) de un bloque nuevo, y me dev
     return matriz_bloque #Devuelvo la matriz asignada al 'bloque' (str)
 
 def mostrar_matriz_bloque(matriz_bloque): #Recoge el bloque (matriz) y lo imprime
-    #Cuerpo General #PANDA: Por ahora con len(bloque), luego si eso cambiar a 'fila in bloque'
+    #Cuerpo General 
     for fila in range(len(matriz_bloque)):
         if fila != 0: 
             print(' '*13, end='') #Para que concuerde con 'Bloque X --> '
@@ -165,6 +163,7 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 
     #Coordenadas internas de X
     for fila in range(len(matriz_bloque)):
+        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] == 'X':
                 X_fila = fila
@@ -173,6 +172,7 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 
     #Cuerpo General
     for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
+        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
                 fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
@@ -198,6 +198,7 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
     #Coordenadas internas de X
     for fila in range(len(matriz_bloque)):
+        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] == 'X':
                 X_fila = fila
@@ -206,6 +207,7 @@ def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
 
     #Cuerpo General
     for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
+        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
                 fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
@@ -254,7 +256,7 @@ def actualizar_tablero(tablero): #Borrar lineas/columnas llenas
     return tablero
 
 #####       4. Terminar
-def bloque_cabe(tablero, matriz_bloque):
+def bloque_cabe(tablero, matriz_bloque): #Quiero saber si hay hueco disponible para el bloque en el tablero
     #Variables
     cabe = False #Asumo que no cabe en ningún lado, y miro si es cierto
 
@@ -323,7 +325,7 @@ def BlockBlast():
     mostrar_tablero(tablero)
 
         ## Medio Juego
-    while not terminado:
+    while not terminado: #Mientras pueda colocar más bloques, el juego sigue (no ha terminado)
             #Inicializar listas y variables
         lista_bloques_no_puestos = [1, 2, 3] #Siempre comienzo con 3 nuevos bloques
         lista_bloques_puestos = [] #Lista con los bloques que ya no puedo posicionar
@@ -351,9 +353,8 @@ def BlockBlast():
         mostrar_matriz_bloque(matriz_bloque3) #Final: Muestro el bloque
         print() #Visual
 
-            #El usuario escoje, posiciona, y el tablero cambia
-                #Escojer y posicionar
-        while cont_bloques_no_puestos > 0: #PANDA: Falta; que los bloques nuevos no tienen hueco (pierdes)
+            #El usuario escoje, posiciona y el tablero cambia
+        while cont_bloques_no_puestos > 0: #Bucle termina cuando he introducido los 3 bloques, o cuando pierdes el juego
             #Variables
             bloque_pos_valido = False #Así se mete en el bucle siempre
             
@@ -367,9 +368,8 @@ def BlockBlast():
 
             while not bloque_pos_valido: #Para saber si puedo poner este bloque en esa posición
                 lista_bloque_pos = elegir_bloque_y_pos(lista_bloques_no_puestos)
-                #print(lista_bloque_pos) #PANDA: Solo para ver, luego borrar
 
-                if lista_bloque_pos[0] not in lista_bloques_puestos: #'lista_bloque_pos[0]' simepre es el número del bloque
+                if lista_bloque_pos[0] not in lista_bloques_puestos: #'lista_bloque_pos[0]' siempre es el número del bloque
                     #Verifico si puedo insertar el bloque en la posición
                     if lista_bloque_pos[0] == 0:
                         bloque_pos_valido = lugar_correcto(lista_bloque_pos, matriz_bloque1, tablero) #Si me devuelve True, borro el bloque de lista_bloques_no_puestos y paso a pedir el siguiente bloque
@@ -394,15 +394,11 @@ def BlockBlast():
                 tablero = colocar_bloque(lista_bloque_pos, matriz_bloque2, tablero)
             else:
                 tablero = colocar_bloque(lista_bloque_pos, matriz_bloque3, tablero)
-            
-            print()#Visual
-            #mostrar_tablero(tablero)
-            print() #Visual
 
             #Actualizar Tablero
             tablero = actualizar_tablero(tablero)
-            print()#Visual
-            mostrar_tablero(tablero)
+            print() #Visual
+            mostrar_tablero(tablero) #Muestro el tablero ya actualizado
             print() #Visual
 
             cont_bloques_no_puestos -= 1 #Sentencia de continuar
@@ -410,3 +406,4 @@ def BlockBlast():
 
 ################################            JUGAR
 BlockBlast()
+
