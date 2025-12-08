@@ -12,13 +12,7 @@ Dichas funciones tienen como fin general...
       --> Modificar el tablero de juego, colocando los bloques y limpiando las filas/columnas llenas
       --> Determinar cuando la partida se ha terminado
 
-### Diagrama de Flujo Principal
-
-El juego funciona con un bucle principal (`While`) que gestiona rondas de 3 bloques nuevos.
-El usuario debe introducir las coordenadas de cada bloque en el tablero de juego.
-El juego termina cuando no existe espacio alguno para introducir los bloques que faltan.
-
-#### Flujo del código
+### Flujo del Código
 
 1. Inicio: El programa comienza creando un tablero vacío de 8x8.
 
@@ -48,3 +42,13 @@ El juego termina cuando no existe espacio alguno para introducir los bloques que
 
       //// Siguiente Ronda: Una vez colocados los 3 bloques, el flujo vuelve al inicio del "Bucle de Partida" para generar nuevos bloques.
 
+##### Optimización del Código
+
+Actualmente el archivo "JUEGO_BlockBlast_Base" contiene el código del juego base. Es por ello que existen diferentes mejoras que se pueden implementar en el código para hacerlo más visual y entretenido (las dejo como puntos de mejora para versiones posteriores).
+
+      --> De momento los 3 bloques aleatorios son distintos entre sí; esto se puede cambiar a que la elección de estos se base en probabilidad.
+      --> Sería posible e interesante agregar un contador de puntos.
+      --> Siempre habrá la posibilidad de agregar más tipos de bloques (actualmente el juego cuenta con 5 bloques diferentes).
+      --> Respecto a lo visual, el programa es mejorable.
+            //// Esta vez me he enfocado en la lógica interna, dejando la estética y el diseño un poco de lado.
+      
