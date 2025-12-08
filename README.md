@@ -16,7 +16,7 @@ Dichas funciones tienen como fin general...
 
 El juego funciona con un bucle principal (`While`) que gestiona rondas de 3 bloques nuevos.
 El usuario debe introducir las coordenadas de cada bloque en el tablero de juego.
-EL juego termina cuando no existe espacio alguno para introducir los bloques que faltan.
+El juego termina cuando no existe espacio alguno para introducir los bloques que faltan.
 
 #### Flujo del código
 
