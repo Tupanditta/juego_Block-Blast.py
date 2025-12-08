@@ -49,7 +49,6 @@ def mostrar_tablero(tablero): #Mostrar el tablero (NOTA: No devuelvo nada)
 
     for fila in range(len(tablero)):
         print(fila, ' |', end='') #Primer símbolo de cada fila
-        
         for columna in range(len(tablero)):
             if tablero[fila][columna] != ' ':
                 print('', tablero[fila][columna], '|', end='')
@@ -92,6 +91,7 @@ def bloques_nuevos(lista_bloques): #Elije 3 bloques nuevos aleatorios de entre t
 def matriz_bloque(bloque): #Le paso el nombre (str) de un bloque nuevo, y me devuelve su respectiva matriz
     #Matrices
         #NOTA: Una 'X' y lo demás 'O' o '_'
+        #NOTA: La 'X' es el punto de anclaje (coordenada que introduce el usuario)
         #NOTA: He creado matrices, NO LISTAS
     Cuadrado_mini = [['X', 'O'], ['O', 'O']] 
     L_mini = [['X', ' '], ['O', ' '], ['O', 'O']]
@@ -121,7 +121,6 @@ def mostrar_matriz_bloque(matriz_bloque): #Recoge el bloque (matriz) y lo imprim
     for fila in range(len(matriz_bloque)):
         if fila != 0: 
             print(' '*13, end='') #Para que concuerde con 'Bloque X --> '
-
         for columna in range(len(matriz_bloque[fila])):
                 print(matriz_bloque[fila][columna], end=' ')
     
@@ -163,7 +162,6 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 
     #Coordenadas internas de X
     for fila in range(len(matriz_bloque)):
-        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] == 'X':
                 X_fila = fila
@@ -172,7 +170,6 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 
     #Cuerpo General
     for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
-        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
                 fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
@@ -198,7 +195,6 @@ def lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=True):
 def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
     #Coordenadas internas de X
     for fila in range(len(matriz_bloque)):
-        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] == 'X':
                 X_fila = fila
@@ -207,7 +203,6 @@ def colocar_bloque(lista_bloque_pos, matriz_bloque, tablero):
 
     #Cuerpo General
     for fila in range(len(matriz_bloque)): #Voy a conseguir cuales serían las coordenadas del bloque en el tablero
-        
         for columna in range(len(matriz_bloque[fila])):
             if matriz_bloque[fila][columna] != ' ': #Es 'O' o 'X'
                 fila_destino_tablero = lista_bloque_pos[1] + (fila - X_fila) #Posición de 'X' o 'O' en el tablero
@@ -231,7 +226,6 @@ def actualizar_tablero(tablero): #Borrar lineas/columnas llenas
     #Localizar columnas llenas
     for columna in range(len(tablero)):
         columna_llena = True #COmienza en True y compruebo que lo sea
-
         for fila in range(len(tablero)):
             if tablero[fila][columna] == ' ':
                 columna_llena = False #Si encuentro un hueco vacío, la columna no está llena
@@ -243,13 +237,11 @@ def actualizar_tablero(tablero): #Borrar lineas/columnas llenas
     
     #Borrar todas las filas llenas
     for fila in range(len(fila_borrar)):
-        
         for elemento in range(len(tablero)):
             tablero[fila_borrar[fila]][elemento] = ' '
 
     #Borrar todas las columnas llenas
     for columna in range(len(columna_borrar)):
-
         for fila in range(len(tablero)):
             tablero[fila][columna_borrar[columna]] = ' '
 
@@ -262,7 +254,6 @@ def bloque_cabe(tablero, matriz_bloque): #Quiero saber si hay hueco disponible p
 
     #Cuerpo General
     for fila in range(len(tablero)):
-
         for columna in range(len(tablero)):
             lista_bloque_pos = ['bloque', fila, columna] #Recorro todas las posiciones posibles del bloque en el tablero
             if lugar_correcto(lista_bloque_pos, matriz_bloque, tablero, avisar=False): #Compruebo si hay algún lugar_correcto (espacio donde cabe el bloque)
@@ -318,10 +309,10 @@ def BlockBlast():
     bloque2 = '' #Nombre del bloque 2
     bloque3 = '' #Nombre del bloque 3
     
-
     #####   Cuerpo General
         ## Inicio
     tablero = crear_tablero(N) #Creo un tablero vacío de NxN
+    print("¡BIENVENIDO A BLOCK BLAST - EDICIÓN TUPANDITTA!")
     mostrar_tablero(tablero)
 
         ## Medio Juego
@@ -343,6 +334,8 @@ def BlockBlast():
         matriz_bloque2 = matriz_bloque(bloque2) #Obtengo la matriz_bloque
         matriz_bloque3 = matriz_bloque(bloque3) #Obtengo la matriz_bloque
 
+        print(f'\n--- NUEVA RONDA ---')
+        
         print('Bloque 1 --> ', end='')
         mostrar_matriz_bloque(matriz_bloque1) #Final: Muestro el bloque
         print() #Visual
@@ -362,7 +355,10 @@ def BlockBlast():
             terminado = terminado_(tablero, matriz_bloque1, matriz_bloque2, matriz_bloque3, lista_bloques_no_puestos)
             if terminado: #No hay espacio para ningún bloque de los que faltan por introducir
                 print() #Visual
-                print('HAS PERDIDO')
+                print('\n################################')
+                print('#        HAS PERDIDO           #')
+                print('#   No caben más bloques :(    #')
+                print('################################\n')
                 
                 break
 
@@ -406,4 +402,5 @@ def BlockBlast():
 
 ################################            JUGAR
 BlockBlast()
+
 
