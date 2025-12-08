@@ -1,6 +1,6 @@
 ####################################################
 
-# Autor: Ander Lifeng Sola
+# Autor: Ander Sola
 # Alias: Tupanditta :)
 # Color Favorito: Azul Stich
 
@@ -332,4 +332,5 @@ def BlockBlast():
 
 
 ################################            JUGAR
+
 BlockBlast()
