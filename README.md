@@ -44,7 +44,7 @@ Dichas funciones tienen como fin general...
 
 ### Optimización del Código
 
-Actualmente el archivo "JUEGO_BlockBlast_Base" contiene el código del juego base. Es por ello que existen diferentes mejoras que se pueden implementar en el código para hacerlo más visual y entretenido (las dejo como puntos de mejora para versiones posteriores).
+Actualmente el archivo "JUEGO_BlockBlast_Base" contiene el código del juego base. Es por ello que existen diferentes mejoras que se pueden implementar en el código para hacerlo más visual y entretenido (las dejo como puntos de mejora para versiones futuras).
 
       --> De momento los 3 bloques aleatorios son distintos entre sí; esto se puede cambiar a que la elección de estos se base en probabilidad.
       --> Sería posible e interesante agregar un contador de puntos.
